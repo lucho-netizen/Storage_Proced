@@ -23,7 +23,7 @@ function runStoredProcedure(callback) {
     }
 
     // Ejecutar el procedimiento almacenado
-    connection.query('CALL suma()', (error, results) => {
+    connection.query('CALL SelectAllValues()', (error, results) => {
       if (error) {
         console.error('Error:', error);
         console.log('Se ha encontrado un error');
@@ -31,7 +31,12 @@ function runStoredProcedure(callback) {
         callback({ status: 'error' });
       } else {
         console.log('Ok!');
-        callback({ status: 'ok', results: results[0] });
+        if (results && results[0] && results[0].length > 0){
+          callback({ status: 'ok', results: results[0] });
+        } else {
+          callback({ status: 'error' });
+        }
+        
       }
 
       connection.release(); // Liberar la conexión en caso de éxito o error
